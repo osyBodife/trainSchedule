@@ -1,0 +1,53 @@
+
+#wrapper{
+    background-color: green;
+}
+
+#trainschedule{
+    background-color:white;
+    border: 2px solid black;
+}
+
+#jumbo{
+    
+    width: 90%;
+    margin: auto;
+
+}
+#currentschedule{
+
+    width: 90%;
+    margin: 15px auto;
+    border: 1px solid green;
+
+}
+#customers {
+    font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
+    border-collapse: collapse;
+    width: 100%;
+  }
+
+  #customers th {
+    padding-top: 12px;
+    padding-bottom: 12px;
+    text-align: left;
+    background-color: white;
+    color: black;
+  }
+h4{
+    color: white;
+    background-color: rgb(24, 135, 172);
+    margin-top: 0px;
+    margin-bottom: 0px;
+}
+
+  #customers tr:nth-child(even){background-color: #f2f2f2;}
+
+#customers tr:hover {background-color: #ddd;
+
+}
+
+form{
+    margin-left: 20px;
+    margin-right: 20px;
+}

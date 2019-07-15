@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+
+<html lang="en-us">
+
+<head>
+
+    <meta charset="UTF-8">
+    <title>Train Time Schedule</title>
+
+    <!-- jQuery -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+
+
+    <!-- Bootstrap CDN-->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+    <!-- Firebase References -->
+    <script src="https://www.gstatic.com/firebasejs/6.0.4/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/6.0.4/firebase-database.js"></script>
+    <link rel="stylesheet" href="assets/css/style.css">
+
+</head>
+
+<body>
+
+    <div class="container" id="wrapper">
+        <div class="row" id="trainschedule">
+            <div class="col-md-12">
+                <diV class="row">
+                    <div class="col-md-12">
+                        <!-- Jumbotron Title -->
+                        <div class="jumbotron" id="jumbo">
+                            <h1 class="text-center">Train Time Schedule</h1>
+                            <h3 class="text-center">"Euro Star Channel"</h3>
+                        </div>
+                    </div>
+
+
+                </diV>
+                <div class="row">
+                    <div class="col-md-12">
+                        <div id="currentschedule">
+                            <h4> Current Train Schedule</h4>
+                            <table id="customers">
+
+                                <tr>
+                                    <th>Train Name</th>
+                                    <th>Destination</th>
+                                    <th>Frequency(min)</th>
+                                    <th>Next Arrival</th>
+                                    <th>Minutes Away</th>
+                                </tr>
+
+
+                            </table>
+                        </div>
+
+                        <div class="row" id="currentschedule">
+                                <h4> Add Train</h4>
+                            <div class="col-md-12">
+                                
+
+                                <div class="card-body">
+                                    <form>
+                                        <div class="form-group row">
+                                            <label for="bidder-name">Train Name</label>
+                                            <input class="form-control" id="bidder-name" type="text">
+                                        </div>
+                                        <div class="form-group row">
+                                            <label for="bidder-price">Destination</label>
+                                            <input class="form-control" id="bidder-price" type="number">
+                                        </div>
+                                        <div class="form-group row">
+                                                <label for="bidder-price">First Time (HH:mm- military time</label>
+                                                <input class="form-control" id="bidder-price" type="number">
+                                            </div>
+                                            <div class="form-group row">
+                                                    <label for="bidder-price">Frequecny</label>
+                                                    <input class="form-control" id="bidder-price" type="number">
+                                                </div>
+                                        <button class="btn btn-primary" id="submit-bid" type="submit">Submit</button>
+                                    </form>
+                                    <br>
+                                    <br>
+                                </div>
+
+
+
+
+
+                            </div>
+                        </div>
+
+
+
+
+
+
+
+
+                    </div>
+                </div>
+
+
+
+
+
+            </div>
+
+
+
+        </div>
+
+
+
+    </div>
+
+
+    <!-- JavaScript -->
+    <script src="assets/javascript/trainApp.js"></script>
+
+</body>
+
+</html>
