@@ -42,12 +42,8 @@ $("#add_train").on("click", function (e) {
     destination = $("#destination").val().trim();
     firstTime = $("#firstTime").val().trim();
     frequency = $("#frequency").val().trim();
-    trainSchedule();
-    // console.log(nextArrival);
-    //store data in database
-    //database.ref().push(newTrain);
-
-
+    //trainSchedule();
+    
 
     // Code for the push
     db.ref().push({
@@ -55,8 +51,8 @@ $("#add_train").on("click", function (e) {
         destination: destination,
         firstTime: firstTime,
         frequency: frequency,
-        minsAway: minsAway,
-        nextArrival: nextArrival,
+        //minsAway: minsAway,
+        //nextArrival: nextArrival,
         dateAdded: firebase.database.ServerValue.TIMESTAMP
     });
      //clear form field after submission
@@ -76,42 +72,29 @@ db.ref().on("child_added", function (childSnapshot) {
     console.log(results.trainName);
     console.log(results.destination);
     console.log(results.frequency);
-    console.log(results.nextArrival);
-    console.log(results.minsAway);
+   
     //values
     trainName = results.trainName;
     destination = results.destination;
     frequency = results.frequency;
-    nextArrival = results.nextArrival;
-    minsAway = results.minsAway;
+     //call the train schedule function
+     trainSchedule();
+     console.log(nextArrival);
+     console.log(minsAway);  
+
+    nextArrival = nextArrival;
+    minsAway = minsAway;
 
 
 
     //table_rows.append("<tr><td> " + trainName + "<th><td>" + destination + "</th><th>" + frequency + "</th><th>" + nextArrival + "</th><th>" + minsAway + "</th></tr>");
     $("#customers > tbody").append("<tr><td>" + trainName + "</td><td>" + destination + "</td><td>" + frequency + "</td><td>" + nextArrival + "</td><td>" + minsAway + "</td></tr>");
-
-
-
-    //console.log(trainName);
+   
 
     // Handle the errors
 }, function (errorObject) {
     console.log("Errors handled: " + errorObject.code);
 });
-
-
-
-
-function renderTrainSchedule(results) {
-    //clear the form to avoid duplicates
-    //$("#tableArea").empty();
-    //create a table where to render results
-
-
-
-
-
-}
 
 
 
@@ -140,13 +123,13 @@ function nextArrivalTime(firstTime, frequency) {
 
     // Minute Until Train
     var timeLeftForTrainToArrive = frequency - tRemainder;
-    //console.log("Next Train arrives in: " + timeLeftForTrainToArrive);
+    console.log("Next Train arrives in: " + timeLeftForTrainToArrive);
     minsAway = timeLeftForTrainToArrive;
 
     // Next Train
     var nextTrain = moment().add(timeLeftForTrainToArrive, "minutes");
     nextArrival = moment(nextTrain).format("hh:mm");
-    //console.log("ARRIVAL TIME: " + moment(nextTrain).format("hh:mm"));
+    console.log("ARRIVAL TIME: " + moment(nextTrain).format("hh:mm"));
 
 
 
@@ -157,8 +140,7 @@ function nextArrivalTime(firstTime, frequency) {
 
 function trainSchedule() {
     nextArrivalTime(firstTime, frequency);
-    //myVar = setTimeout(trainSchedule, 60000);
-    myVar = setInterval(trainSchedule, 60000);
+   myVar = setInterval(trainSchedule, 60000);
 }
 
 
