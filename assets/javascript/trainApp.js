@@ -1,107 +1,167 @@
-  // Your web app's Firebase configuration
-  var firebaseConfig = {
-    apiKey: "AIzaSyAVBAgscXIPiuuOILcRkDHCfu8b8mbYG0g",
-    authDomain: "trainapp-cd0db.firebaseapp.com",
-    databaseURL: "https://trainapp-cd0db.firebaseio.com",
-    projectId: "trainapp-cd0db",
+// Your web app's Firebase configuration
+
+
+var firebaseConfig = {
+    apiKey: "AIzaSyA4E71DgqzRTsOG7qjh0DnVUrssy1vqgWI",
+    authDomain: "trainapp-c09d9.firebaseapp.com",
+    databaseURL: "https://trainapp-c09d9.firebaseio.com",
+    projectId: "trainapp-c09d9",
     storageBucket: "",
-    messagingSenderId: "95660689069",
-    appId: "1:95660689069:web:d1e506299b385795"
-  };
-  // Initialize Firebase
-  firebase.initializeApp(firebaseConfig);
+    messagingSenderId: "802901132792",
+    appId: "1:802901132792:web:5e9cf08a4e11d445"
+};
+// Initialize Firebase
+firebase.initializeApp(firebaseConfig);
 
-
-//firebase.initializeApp(config);
 
 // Create a variable to reference the database
-var db = firebase.database();
-
-// declare variables
-var trainName;
-var destinatio;
-var firstTime;
-var frequency;
-var name="";
+const db = firebase.database();
 
 
-
-
-$("#add_train").on("click", function(e){
-    e.preventDefault();
-    /*
-    // create a table in tableArea div
-    $("#tableArea").append("<table id='customers'></table>");
-     let table=$("#tableArea").children();
-    table.append( "<tr><th>Train Name</th><th>Destination</th><th>Frequency(min)</th><th>Next Arrival</th><th>Minutes Away</th></tr>");
-*/
-let table =$("<table></table>");
-//assign attribute
-table.attr("Id", "customers");
-//append the table to div tableArea
-$("#tableArea").append(table);
-let table_rows=$("#tableArea").children();
-table_rows.append( "<tr><th>Train Name</th><th>Destination</th><th>Frequency(min)</th><th>Next Arrival</th><th>Minutes Away</th></tr>");
-
-//clear form field after submission
-$('#trainForm input[type="text"]').val('');
-
-
-
-})
-
-
+// Initial Values
+var trainName = "";
+var destination = "";
+var firstTime = "";
+var frequency = "";
+var minsAway = "";
+let nextArrival = "";
+let results;
+var timeLeftForTrainToArrive = "";
 let nextTrain;
-    function nextArrivalTime(firstTime, tFrequency) {
 
-      var firstTimeConverted = moment(firstTime, "HH:mm").subtract(1, "years");
-      //console.log("firstTime :" + firstTimeConverted);
+// Capture data on the clcik of add a train Button 
+$("#add_train").on("click", function (e) {
+    // prevent page from freshing
+    e.preventDefault();
 
-      // Current Time
-      var currentTime = moment();
-      //console.log("CURRENT TIME: " + moment(currentTime).format("hh:mm"));
+    //clear table
+    //$("#tableArea").empty();
 
-      // Difference between the times
-      // var diffTimes = moment().diff(firstTimeConverted, "minutes");
-      var diffTime = currentTime.diff(moment(firstTimeConverted), "minutes");
-            // console.log("DIFFERENCE IN TIME: " + diffTime);
-      
-
-      // Time apart (remainder)
-      var tRemainder = diffTime % tFrequency;
-      //console.log(tRemainder);
-
-      // Minute Until Train
-      var timeLeftForTrainToArrive = tFrequency - tRemainder;
-      console.log("Next Train arrives in: " + timeLeftForTrainToArrive);
-
-      // Next Train
-      var nextTrain = moment().add(timeLeftForTrainToArrive, "minutes");
-      console.log("ARRIVAL TIME: " + moment(nextTrain).format("hh:mm"));
-
-      //function to compute next arrival time
-      //assumption Train runs 24/7 
-      $("body").append(timeLeftForTrainToArrive);
-      $("body").append("<br>");
-      $("body").append(moment(nextTrain).format("hh:mm"));
+    //get the values from the input fields
+    trainName = $("#trainName").val().trim();
+    destination = $("#destination").val().trim();
+    firstTime = $("#firstTime").val().trim();
+    frequency = $("#frequency").val().trim();
+    trainSchedule();
+    // console.log(nextArrival);
+    //store data in database
+    //database.ref().push(newTrain);
 
 
 
-    }
-    console.log(";;;;;;;;;;;;;;;;;;;;;;;;;;;;");
-    
-
-    function trainSchedule(tFrequency) {
-      tFrequency = 6;
-      firstTime = "05:30";
-      nextArrivalTime(firstTime, tFrequency);
-      //myVar = setTimeout(trainSchedule, 60000);
-      myVar = setInterval(trainSchedule, 60000);
-    }
-
-    $(document).ready(function () {
-      //trainSchedule();
+    // Code for the push
+    db.ref().push({
+        trainName: trainName,
+        destination: destination,
+        firstTime: firstTime,
+        frequency: frequency,
+        minsAway: minsAway,
+        nextArrival: nextArrival,
+        dateAdded: firebase.database.ServerValue.TIMESTAMP
     });
+     //clear form field after submission
+     $('#trainForm input[type="text"]').val('');
+});
+
+
+
+
+// Firebase watcher + initial loader HINT: .on("value")
+db.ref().on("child_added", function (childSnapshot) {
+
+    // Log everything that's coming out of snapshot
+    //console.log(snapshot.val());
+    results = childSnapshot.val();
+    // renderTrainSchedule(results);
+    console.log(results.trainName);
+    console.log(results.destination);
+    console.log(results.frequency);
+    console.log(results.nextArrival);
+    console.log(results.minsAway);
+    //values
+    trainName = results.trainName;
+    destination = results.destination;
+    frequency = results.frequency;
+    nextArrival = results.nextArrival;
+    minsAway = results.minsAway;
+
+
+
+    //table_rows.append("<tr><td> " + trainName + "<th><td>" + destination + "</th><th>" + frequency + "</th><th>" + nextArrival + "</th><th>" + minsAway + "</th></tr>");
+    $("#customers > tbody").append("<tr><td>" + trainName + "</td><td>" + destination + "</td><td>" + frequency + "</td><td>" + nextArrival + "</td><td>" + minsAway + "</td></tr>");
+
+
+
+    //console.log(trainName);
+
+    // Handle the errors
+}, function (errorObject) {
+    console.log("Errors handled: " + errorObject.code);
+});
+
+
+
+
+function renderTrainSchedule(results) {
+    //clear the form to avoid duplicates
+    //$("#tableArea").empty();
+    //create a table where to render results
+
+
+
+
+
+}
+
+
+
+
+
+
+
+function nextArrivalTime(firstTime, frequency) {
+
+    var firstTimeConverted = moment(firstTime, "HH:mm").subtract(1, "years");
+    //console.log("firstTime :" + firstTimeConverted);
+
+    // Current Time
+    var currentTime = moment();
+    //console.log("CURRENT TIME: " + moment(currentTime).format("hh:mm"));
+
+    // Difference between the times
+    // var diffTimes = moment().diff(firstTimeConverted, "minutes");
+    var diffTime = currentTime.diff(moment(firstTimeConverted), "minutes");
+    // console.log("DIFFERENCE IN TIME: " + diffTime);
+
+
+    // Time apart (remainder)
+    var tRemainder = diffTime % frequency;
+    //console.log(tRemainder);
+
+    // Minute Until Train
+    var timeLeftForTrainToArrive = frequency - tRemainder;
+    //console.log("Next Train arrives in: " + timeLeftForTrainToArrive);
+    minsAway = timeLeftForTrainToArrive;
+
+    // Next Train
+    var nextTrain = moment().add(timeLeftForTrainToArrive, "minutes");
+    nextArrival = moment(nextTrain).format("hh:mm");
+    //console.log("ARRIVAL TIME: " + moment(nextTrain).format("hh:mm"));
+
+
+
+
+}
+//console.log(";;;;;;;;;;;;;;;;;;;;;;;;;;;;");
+
+
+function trainSchedule() {
+    nextArrivalTime(firstTime, frequency);
+    //myVar = setTimeout(trainSchedule, 60000);
+    myVar = setInterval(trainSchedule, 60000);
+}
+
+
 
 
 
