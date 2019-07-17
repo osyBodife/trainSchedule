@@ -1,5 +1,5 @@
-  // Your web app's Firebase configuration
-  var firebaseConfig = {
+// Your web app's Firebase configuration
+var firebaseConfig = {
     apiKey: "AIzaSyCm7PnWkYcEsJ8qhiwLdMB_TvNOt4NNsic",
     authDomain: "trainapp-e8d0a.firebaseapp.com",
     databaseURL: "https://trainapp-e8d0a.firebaseio.com",
@@ -7,15 +7,9 @@
     storageBucket: "",
     messagingSenderId: "703731746875",
     appId: "1:703731746875:web:90e45ee0db5a8577"
-  };
-  // Initialize Firebase
-  firebase.initializeApp(firebaseConfig);
-
-
-
-
-
-
+};
+// Initialize Firebase
+firebase.initializeApp(firebaseConfig);
 
 
 // Create a variable to reference the database
@@ -33,6 +27,23 @@ let results;
 var timeLeftForTrainToArrive = "";
 let nextTrain;
 
+
+// function to display the current Time 
+function currentTime() {
+    var currentTime = moment();
+    let text = "CURRENT TIME: " + moment(currentTime).format("hh:mm");
+    $("#currentTime").append(text);
+}
+currentTime();
+//function to refresh page every minute
+function AutoRefresh(t) {
+    setTimeout("location.reload(true);", t);
+}
+
+
+//console.log("CURRENT TIME: " + moment(currentTime).format("hh:mm"));
+
+
 // Capture data on the clcik of add a train Button 
 $("#add_train").on("click", function (e) {
     // prevent page from freshing
@@ -46,7 +57,6 @@ $("#add_train").on("click", function (e) {
     destination = $("#destination").val().trim();
     firstTime = $("#firstTime").val().trim();
     frequency = $("#frequency").val().trim();
-    //trainSchedule();
 
 
     // Code for the push
@@ -55,8 +65,6 @@ $("#add_train").on("click", function (e) {
         destination: destination,
         firstTime: firstTime,
         frequency: frequency,
-        //minsAway: minsAway,
-        //nextArrival: nextArrival,
         dateAdded: firebase.database.ServerValue.TIMESTAMP
     });
     //clear form field after submission
@@ -68,32 +76,49 @@ $("#add_train").on("click", function (e) {
 
 // Firebase watcher + initial loader HINT: .on("value")
 db.ref().on("child_added", function (childSnapshot) {
+    //assign generated data to a variable
+    let results = childSnapshot.val();
+    console.log(results);
 
-    // Log everything that's coming out of snapshot
-    console.log(childSnapshot.val());
-    results = childSnapshot.val();
-    // renderTrainSchedule(results);
     console.log(results.trainName);
     console.log(results.destination);
     console.log(results.frequency);
+    console.log(results.firstTime);
 
     //values
     trainName = results.trainName;
     destination = results.destination;
     frequency = results.frequency;
-    //call the train schedule function
-    // trainSchedule();
-    nextArrivalTime(results.dateAdded, results.frequency);
-    console.log(nextArrival);
-    console.log(minsAway);
+    firstTime = results.firstTime;
 
-    nextArrival = nextArrival;
-    minsAway = minsAway;
-
+    let firstTimeConverted = moment(results.firstTime, "hh:mm").subtract(1, "years");
+    let timeDiff = moment().diff(moment(firstTimeConverted), "minutes");
+    let timeRemain = timeDiff % results.frequency;
+    let timeLeftForTrainToArrive = results.frequency - timeRemain;
+    let nextTrain = moment().add(timeLeftForTrainToArrive, "minutes");
 
 
-    //table_rows.append("<tr><td> " + trainName + "<th><td>" + destination + "</th><th>" + frequency + "</th><th>" + nextArrival + "</th><th>" + minsAway + "</th></tr>");
-    $("#customers > tbody").append("<tr><td>" + trainName + "</td><td>" + destination + "</td><td>" + frequency + "</td><td>" + nextArrival + "</td><td>" + minsAway + "</td></tr>");
+    // Minute Until Train
+
+    //console.log("Next Train arrives in: " + timeLeftForTrainToArrive);
+     minsAway = timeLeftForTrainToArrive;
+     console.log("The train is away by "+ minsAway);
+
+    // Next Train
+
+    nextArrival = moment(nextTrain).format("hh:mm");
+    console.log("ARRIVAL TIME: " + moment(nextTrain).format("hh:mm"));
+
+
+    let newrow = $("<tr>");
+    newrow.append($("<td>" + results.trainName + "</td>"));
+    newrow.append($("<td>" + results.destination + "</td>"));
+    newrow.append($("<td >" + results.frequency + "</td>"));
+    newrow.append($("<td >" + nextArrival + "</td>"));
+    newrow.append($("<td >" + minsAway + "</td>"));
+    //newrow.append($("<td class='text-center'><button class='arrival btn btn-danger btn-xs' data-key='" + key + "'>X</button></td>"));
+    
+    $("#customers > tbody").append(newrow);
 
 
     // Handle the errors
@@ -102,58 +127,6 @@ db.ref().on("child_added", function (childSnapshot) {
 });
 
 
-
-
-
-
-
-function nextArrivalTime(firstTime, frequency) {
-    console.log("First Time: ", firstTime);
-    console.log("Frequency: ", frequency);
-
-    // var firstTimeConverted = moment(firstTime, "HH:mm").subtract(1, "years");
-    // console.log("firstTime :" + firstTimeConverted);
-    // var firstTimeConverted = moment(firstTime, "HH:mm").subtract(1, "years");
-    var firstTimeConverted = moment.unix(firstTime).format("MM/DD/YYYY");
-    console.log("First time converted: ", firstTimeConverted);
-
-    // Current Time
-    var currentTime = moment();
-    //console.log("CURRENT TIME: " + moment(currentTime).format("hh:mm"));
-    console.log("Current time: ", currentTime);
-
-    // Difference between the times
-    // var diffTimes = moment().diff(firstTimeConverted, "minutes");
-    var diffTime = currentTime.diff(firstTimeConverted, "minutes");
-    // console.log("DIFFERENCE IN TIME: " + diffTime);
-    console.log("Diff time: ", diffTime)
-
-
-    // Time apart (remainder)
-    var tRemainder = diffTime % frequency;
-    //console.log(tRemainder);
-
-    // Minute Until Train
-    var timeLeftForTrainToArrive = frequency - tRemainder;
-    console.log("Next Train arrives in: " + timeLeftForTrainToArrive);
-    minsAway = timeLeftForTrainToArrive;
-
-    // Next Train
-    var nextTrain = moment().add(timeLeftForTrainToArrive, "minutes");
-    nextArrival = moment(nextTrain).format("hh:mm");
-    console.log("ARRIVAL TIME: " + moment(nextTrain).format("hh:mm"));
-
-
-
-
-}
-//console.log(";;;;;;;;;;;;;;;;;;;;;;;;;;;;");
-
-
-function trainSchedule() {
-   // nextArrivalTime(firstTime, frequency);
-    //myVar = setInterval(trainSchedule, 60000);
-}
 
 
 

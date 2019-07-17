@@ -52,3 +52,12 @@ form{
     margin-left: 20px;
     margin-right: 20px;
 }
+
+#currentTime{
+    text-align: center;
+    width: 25%;
+    margin: auto;
+    background-color: red;
+   
+
+}
