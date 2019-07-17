@@ -30,6 +30,7 @@
 
   #customers th {
     padding-top: 12px;
+    
     padding-bottom: 12px;
     text-align: left;
     background-color: white;
@@ -40,6 +41,11 @@ h4{
     background-color: rgb(24, 135, 172);
     margin-top: 0px;
     margin-bottom: 0px;
+}
+
+#customers td{
+    text-align: left;
+    padding-left: 20px;
 }
 
   #customers tr:nth-child(even){background-color: #f2f2f2;}
