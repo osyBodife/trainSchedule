@@ -115,7 +115,7 @@ db.ref().on("child_added", function (childSnapshot) {
     newrow.append($("<td >" + results.frequency + "</td>"));
     newrow.append($("<td >" + nextArrival + "</td>"));
     newrow.append($("<td >" + minsAway + "</td>"));
-    //newrow.append($("<td class='text-center'><button class='arrival btn btn-danger btn-xs' data-key='" + key + "'>X</button></td>"));
+    
 
     $("#customers > tbody").append(newrow);
 
