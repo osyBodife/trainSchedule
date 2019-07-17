@@ -1,21 +1,17 @@
-  // Your web app's Firebase configuration
-  var firebaseConfig = {
-    apiKey: "AIzaSyCm7PnWkYcEsJ8qhiwLdMB_TvNOt4NNsic",
-    authDomain: "trainapp-e8d0a.firebaseapp.com",
-    databaseURL: "https://trainapp-e8d0a.firebaseio.com",
-    projectId: "trainapp-e8d0a",
+// Your web app's Firebase configuration
+
+
+var firebaseConfig = {
+    apiKey: "AIzaSyA4E71DgqzRTsOG7qjh0DnVUrssy1vqgWI",
+    authDomain: "trainapp-c09d9.firebaseapp.com",
+    databaseURL: "https://trainapp-c09d9.firebaseio.com",
+    projectId: "trainapp-c09d9",
     storageBucket: "",
-    messagingSenderId: "703731746875",
-    appId: "1:703731746875:web:90e45ee0db5a8577"
-  };
-  // Initialize Firebase
-  firebase.initializeApp(firebaseConfig);
-
-
-
-
-
-
+    messagingSenderId: "802901132792",
+    appId: "1:802901132792:web:5e9cf08a4e11d445"
+};
+// Initialize Firebase
+firebase.initializeApp(firebaseConfig);
 
 
 // Create a variable to reference the database
@@ -47,7 +43,7 @@ $("#add_train").on("click", function (e) {
     firstTime = $("#firstTime").val().trim();
     frequency = $("#frequency").val().trim();
     //trainSchedule();
-
+    
 
     // Code for the push
     db.ref().push({
@@ -59,8 +55,8 @@ $("#add_train").on("click", function (e) {
         //nextArrival: nextArrival,
         dateAdded: firebase.database.ServerValue.TIMESTAMP
     });
-    //clear form field after submission
-    $('#trainForm input[type="text"]').val('');
+     //clear form field after submission
+     $('#trainForm input[type="text"]').val('');
 });
 
 
@@ -70,22 +66,21 @@ $("#add_train").on("click", function (e) {
 db.ref().on("child_added", function (childSnapshot) {
 
     // Log everything that's coming out of snapshot
-    console.log(childSnapshot.val());
+    //console.log(snapshot.val());
     results = childSnapshot.val();
     // renderTrainSchedule(results);
     console.log(results.trainName);
     console.log(results.destination);
     console.log(results.frequency);
-
+   
     //values
     trainName = results.trainName;
     destination = results.destination;
     frequency = results.frequency;
-    //call the train schedule function
-    // trainSchedule();
-    nextArrivalTime(results.dateAdded, results.frequency);
-    console.log(nextArrival);
-    console.log(minsAway);
+     //call the train schedule function
+     trainSchedule();
+     console.log(nextArrival);
+     console.log(minsAway);  
 
     nextArrival = nextArrival;
     minsAway = minsAway;
@@ -94,7 +89,7 @@ db.ref().on("child_added", function (childSnapshot) {
 
     //table_rows.append("<tr><td> " + trainName + "<th><td>" + destination + "</th><th>" + frequency + "</th><th>" + nextArrival + "</th><th>" + minsAway + "</th></tr>");
     $("#customers > tbody").append("<tr><td>" + trainName + "</td><td>" + destination + "</td><td>" + frequency + "</td><td>" + nextArrival + "</td><td>" + minsAway + "</td></tr>");
-
+   
 
     // Handle the errors
 }, function (errorObject) {
@@ -108,25 +103,18 @@ db.ref().on("child_added", function (childSnapshot) {
 
 
 function nextArrivalTime(firstTime, frequency) {
-    console.log("First Time: ", firstTime);
-    console.log("Frequency: ", frequency);
 
-    // var firstTimeConverted = moment(firstTime, "HH:mm").subtract(1, "years");
-    // console.log("firstTime :" + firstTimeConverted);
-    // var firstTimeConverted = moment(firstTime, "HH:mm").subtract(1, "years");
-    var firstTimeConverted = moment.unix(firstTime).format("MM/DD/YYYY");
-    console.log("First time converted: ", firstTimeConverted);
+    var firstTimeConverted = moment(firstTime, "HH:mm").subtract(1, "years");
+    //console.log("firstTime :" + firstTimeConverted);
 
     // Current Time
     var currentTime = moment();
     //console.log("CURRENT TIME: " + moment(currentTime).format("hh:mm"));
-    console.log("Current time: ", currentTime);
 
     // Difference between the times
     // var diffTimes = moment().diff(firstTimeConverted, "minutes");
-    var diffTime = currentTime.diff(firstTimeConverted, "minutes");
+    var diffTime = currentTime.diff(moment(firstTimeConverted), "minutes");
     // console.log("DIFFERENCE IN TIME: " + diffTime);
-    console.log("Diff time: ", diffTime)
 
 
     // Time apart (remainder)
@@ -151,11 +139,9 @@ function nextArrivalTime(firstTime, frequency) {
 
 
 function trainSchedule() {
-   // nextArrivalTime(firstTime, frequency);
-    //myVar = setInterval(trainSchedule, 60000);
+    nextArrivalTime(firstTime, frequency);
+   myVar = setInterval(trainSchedule, 60000);
 }
-
-
 
 
 
